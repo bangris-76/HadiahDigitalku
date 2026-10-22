@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hadiah Digitalku</title>
+    <style>
+        /* CSS Sederhana untuk Tampilan */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffe6e6; /* Warna pink lembut */
+            text-align: center;
+            padding: 20px;
+            color: #333;
+        }
+        .screen { display: none; }
+        .active { display: block; }
+        
+        button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            margin: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 80%;
+            max-width: 300px;
+        }
+        button:hover { background-color: #cc0000; }
+        
+        .game-area {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LAYAR 1: MENU UTAMA -->
+    <div id="menu-utama" class="screen active">
+        <h2>Selamat Datang di Hadiah Digitalku 💖</h2>
+        <p>Pilih hadiah spesial untukmu:</p>
+        <button onclick="bukaMenuPacar()">💌 Ucapan Untuk Pacar</button>
+        <button onclick="alert('Fitur Ucapan Tahun Baru segera hadir!')">🎉 Ucapan Selamat Tahun</button>
+        <button onclick="alert('Fitur Jam Pasir (HTML/CSS) segera hadir!')">⏳ Jam Berpasir</button>
+    </div>
+
+    <!-- LAYAR 2: MENU PACAR -->
+    <div id="menu-pacar" class="screen">
+        <h2>Pilih Suasana Hati Kamu Hari Ini:</h2>
+        <button onclick="mulaiGame('gombal')">😎 Lagi Pengen Dibuat Baper (Gombal)</button>
+        <button onclick="mulaiGame('nyambak')">😭 Lagi Sedih/Nyambak</button>
+        <button onclick="mulaiGame('biasa')">😊 Ucapan Biasa Saja</button>
+        <br><br>
+        <button onclick="tampilkanLayar('menu-utama')" style="background-color: gray;">⬅ Kembali</button>
+    </div>
+
+    <!-- LAYAR 3: AREA GAME (Sebelum Ucapan Muncul) -->
+    <div id="area-game" class="screen">
+        <h2 id="judul-game">Mini Game Dulu Ya!</h2>
+        <div class="game-area" id="konten-game">
+            <!-- Game akan dimuat di sini -->
+        </div>
+        <button id="tombol-kejutan" onclick="tampilkanUcapan()" style="display:none;">Klik untuk Buka Ucapan 🎁</button>
+        <br>
+        <button onclick="tampilkanLayar('menu-pacar')" style="background-color: gray; margin-top: 20px;">⬅ Kembali</button>
+    </div>
+
+    <!-- LAYAR 4: HASIL UCAPAN -->
+    <div id="layar-ucapan" class="screen">
+        <h2>Pesan Spesial Untukmu 💕</h2>
+        <div class="game-area">
+            <p id="teks-ucapan" style="font-size: 18px; line-height: 1.6;"></p>
+        </div>
+        <button onclick="tampilkanLayar('menu-utama')">🏠 Kembali ke Menu Utama</button>
+    </div>
+
+    <script>
+        // Variabel untuk menyimpan pilihan user
+        let kategoriDipilih = "";
+
+        // Fungsi untuk berpindah layar
+        function tampilkanLayar(idLayar) {
+            // Sembunyikan semua layar
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            // Tampilkan layar yang dipilih
+            document.getElementById(idLayar).classList.add('active');
+        }
+
+        function bukaMenuPacar() {
+            tampilkanLayar('menu-pacar');
+        }
+
+        // Fungsi saat memilih kategori (Gombal, Nyambak, Biasa)
+        function mulaiGame(kategori) {
+            kategoriDipilih = kategori;
+            tampilkanLayar('area-game');
+            
+            let kontenGame = document.getElementById('konten-game');
+            let judulGame = document.getElementById('judul-game');
+            let tombolKejutan = document.getElementById('tombol-kejutan');
+
+            // Reset tampilan
+            tombolKejutan.style.display = 'none';
+            kontenGame.innerHTML = '';
+
+            // Logika Mini Game berdasarkan kategori
+            if (kategori === 'gombal') {
+                judulGame.innerText = "Game: Tangkap Hati! ❤️";
+                kontenGame.innerHTML = `
+                    <p>Klik tombol di bawah 3 kali untuk menangkap hati!</p>
+                    <button onclick="menangGame()">Tangkap Hati 🎈</button>
+                `;
+            } else if (kategori === 'nyambak') {
+                judulGame.innerText = "Game: Kumpulkan Pelukan! 🫂";
+                kontenGame.innerHTML = `
+                    <p>Sedang sedih? Yuk kumpulkan 2 pelukan virtual!</p>
+                    <button onclick="menangGame()">Peluk Aku 🫂</button>
+                `;
+            } else {
+                judulGame.innerText = "Game: Tebak Angka! 🔢";
+                kontenGame.innerHTML = `
+                    <p>Aku memikirkan angka 1 sampai 5. Coba tebak!</p>
+                    <button onclick="menangGame()">Tebak Angka 3</button>
+                `;
+            }
+        }
+
+        // Fungsi saat game selesai/menang
+        function menangGame() {
+            alert("Yeay! Kamu menang! 🎉");
+            document.getElementById('konten-game').innerHTML = "<p>Hebat! Hadiahnya sudah terbuka.</p>";
+            document.getElementById('tombol-kejutan').style.display = 'inline-block';
+        }
+
+        // Fungsi untuk menampilkan ucapan sesuai kategori
+        function tampilkanUcapan() {
+            tampilkanLayar('layar-ucapan');
+            let teksUcapan = "";
+
+            if (kategoriDipilih === 'gombal') {
+                teksUcapan = "Kamu tahu nggak bedanya kamu sama matahari? Kalau matahari bikin terang dunia, kalau kamu bikin terang hidupku. I love you! 🥰";
+            } else if (kategoriDipilih === 'nyambak') {
+                teksUcapan = "Jangan sedih terus ya. Aku mungkin nggak bisa selalu ada di sampingmu, tapi aku selalu ada buat kamu. Peluk virtual dari jauh! ❤️ Semangat ya!";
+            } else {
+                teksUcapan = "Selamat hari yang indah! Semoga harimu menyenangkan dan jangan lupa makan ya. Aku sayang kamu selalu.";
+            }
+
+            document.getElementById('teks-ucapan').innerText = teksUcapan;
+        }
+    </script>
+
+</body>
+</html>
